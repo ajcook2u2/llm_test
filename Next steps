@@ -1,0 +1,19 @@
+Make sure the table is correctly sized.
+
+Figure out the ideal size for the responses. Do some manual tests in order to give the LLM some examples to pull from
+
+Automate the examples being pulled into a small db for later reference
+
+Make the presi_pull dates easier to change at the top of the file for ease of use.
+
+Auto-format the numbers to look good in a slide
+
+Ensure the text is formatted to look good in a slide
+
+Include the reporting dates somewhere on the slide.
+
+Stretch:
+Incorporate Change history in order to highlight major changes
+
+Incorporate pseudo account data in order to create unique highlights if something is particularly noteworthy, ie. keywords
+

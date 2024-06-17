@@ -40,13 +40,13 @@ for year in years:
     counter = 0
     for month in months:
         if month not in on_season_months:
-            cpm.append(random.randrange(200, 700) / 1000)
-            ctr.append(random.randrange(200, 700) / 10000)
-            conv_rate.append(random.randrange(200, 700) / 10000)
+            cpm.append(random.randrange(200, 400) / 1000)
+            ctr.append(random.randrange(200, 400) / 10000)
+            conv_rate.append(random.randrange(200, 400) / 10000)
         if month in on_season_months:
-            cpm.append(random.randrange(100, 200) / 10000)
-            ctr.append(random.randrange(100, 200) / 1000)
-            conv_rate.append(random.randrange(100, 200) / 1000)
+            cpm.append(random.randrange(100, 150) / 10000)
+            ctr.append(random.randrange(100, 150) / 1000)
+            conv_rate.append(random.randrange(100, 150) / 1000)
         impr.append(round(monthly_budgets[counter] / cpm[counter]) * 1000)
         clicks.append(round(impr[counter] * ctr[counter]))
         conversions.append(clicks[counter] * conv_rate[counter])
@@ -123,10 +123,10 @@ for year in years:
     quarterly_cpc = [quarter1_cpc, quarter2_cpc, quarter3_cpc, quarter4_cpc]
 
     quarterly_data = {
+        'spend': quarterly_cost,
         'impr': quarterly_impr,
         'clicks': quarterly_clicks,
         'ctr': quarterly_ctr,
-        'cost': quarterly_cost,
         'conversions': quarterly_conversions,
         'cpa': quarterly_cpa,
         'cpc': quarterly_cpc,
