@@ -145,7 +145,7 @@ qoq_month.reset_index(inplace=True)
 
 deltas = data_delta(current_quarter, qoq_quarter, yoy_quarter, current_month, qoq_month, yoy_month, quarter_columns)
 print(deltas['qoq_quarter_delta'])
-print(deltas['yoy_quarter_delta'])
+print(deltas['yoy_quarter_delta'][0]['spend'])
 
 
 model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf", device='gpu')

@@ -40,11 +40,11 @@ for year in years:
     counter = 0
     for month in months:
         if month not in on_season_months:
-            cpm.append(random.randrange(200, 400) / 1000)
-            ctr.append(random.randrange(200, 400) / 10000)
-            conv_rate.append(random.randrange(200, 400) / 10000)
+            cpm.append(random.randrange(200, 400) / 10)
+            ctr.append(random.randrange(200, 400) / 100)
+            conv_rate.append(random.randrange(200, 400) / 100)
         if month in on_season_months:
-            cpm.append(random.randrange(100, 150) / 10000)
+            cpm.append(random.randrange(100, 150) / 100)
             ctr.append(random.randrange(100, 150) / 1000)
             conv_rate.append(random.randrange(100, 150) / 1000)
         impr.append(round(monthly_budgets[counter] / cpm[counter]) * 1000)
