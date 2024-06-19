@@ -40,9 +40,50 @@ for i in slide1.shapes:
     print(i)
 
 
+
+def number_round_stylized(number):
+    number = float(number)
+    if 1 <= number < 1000:
+        return number
+    elif 1000 <= number < 1000000:
+        number = number / 10
+        number = round(number)
+        number = str(number / 100)
+        number = f'{number}k'
+        return number
+    elif number > 1000000:
+        number = number / 10000
+        number = round(number)
+        number = str(number / 100)
+        number = f'{number}M'
+        return number
+    else:
+        number1 = str(number)
+        number1 = number1.split('.')[1]
+        scaler = 2
+        for digit in number1:
+            if digit == '0':
+                scaler += 1
+            else:
+                break
+        if scaler > 0:
+            number = number * (10**scaler)
+            number = round(number)
+            number = number / (10**scaler)
+            return number
+        else:
+            number = float(number)
+            number = number * 1000
+            number = round(number)
+            number = number / 1000
+            return number
+
+
 #how to access the title of a slide
 title = slide1.shapes.title
 print('title', title.text)
+print(current_quarter['cpc'], 'k')
+print(number_round_stylized(current_quarter['cpc']), 'p')
 
 #How to access and change cells on a table
 table = slide1.shapes[1]
@@ -51,34 +92,34 @@ table.table.cell(0, 0).text = 'Year'
 table.table.cell(1, 0).text = '2024'
 table.table.cell(2, 0).text = '2023'
 table.table.cell(3, 0).text = 'YoY'
-
+#
 table.table.cell(0, 1).text = 'Spend'
-table.table.cell(1, 1).text = str(current_quarter['spend'])
-table.table.cell(2, 1).text = str(yoy_quarter['spend'])
+table.table.cell(1, 1).text = f"${number_round_stylized(current_quarter['spend'])}"
+table.table.cell(2, 1).text = f"${number_round_stylized(yoy_quarter['spend'])}"
+#
+table.table.cell(0, 2).text = 'Impr.'
+table.table.cell(1, 2).text = f"{number_round_stylized(current_quarter['impr'])}"
+table.table.cell(2, 2).text = f"{number_round_stylized(yoy_quarter['impr'])}"
 
-table.table.cell(0, 1).text = 'Impressions'
-table.table.cell(1, 1).text = str(current_quarter['impr'])
-table.table.cell(2, 1).text = str(yoy_quarter['impr'])
+table.table.cell(0, 3).text = 'Clicks'
+table.table.cell(1, 3).text = f"{number_round_stylized(current_quarter['clicks'])}"
+table.table.cell(2, 3).text = f"{number_round_stylized(yoy_quarter['clicks'])}"
 
-table.table.cell(0, 2).text = 'Clicks'
-table.table.cell(1, 2).text = str(current_quarter['clicks'])
-table.table.cell(2, 2).text = str(yoy_quarter['clicks'])
+table.table.cell(0, 4).text = 'CTR'
+table.table.cell(1, 4).text = f"{number_round_stylized(current_quarter['ctr'])}%"
+table.table.cell(2, 4).text = f"{number_round_stylized(yoy_quarter['ctr'])}%"
 
-table.table.cell(0, 3).text = 'CTR'
-table.table.cell(1, 3).text = str(current_quarter['ctr'])
-table.table.cell(2, 3).text = str(yoy_quarter['ctr'])
+table.table.cell(0, 5).text = 'CPC'
+table.table.cell(1, 5).text = f"${number_round_stylized(current_quarter['cpc'])}"
+table.table.cell(2, 5).text = f"${number_round_stylized(yoy_quarter['cpc'])}"
 
-table.table.cell(0, 4).text = 'CPC'
-table.table.cell(1, 4).text = str(current_quarter['cpc'])
-table.table.cell(2, 4).text = str(yoy_quarter['cpc'])
+table.table.cell(0, 6).text = 'Conversions'
+table.table.cell(1, 6).text = f"{number_round_stylized(current_quarter['conversions'])}"
+table.table.cell(2, 6).text = f"{number_round_stylized(yoy_quarter['conversions'])}"
 
-table.table.cell(0, 5).text = 'Conversions'
-table.table.cell(1, 5).text = str(current_quarter['conversions'])
-table.table.cell(2, 5).text = str(yoy_quarter['conversions'])
-
-table.table.cell(0, 6).text = 'Conv. Rate'
-table.table.cell(1, 6).text = str(current_quarter['conv rate'])
-table.table.cell(2, 6).text = str(yoy_quarter['conv rate'])
+table.table.cell(0, 7).text = 'Conv. Rate'
+table.table.cell(1, 7).text = f"{number_round_stylized(current_quarter['conv rate'])}%"
+table.table.cell(2, 7).text = f"{number_round_stylized(yoy_quarter['conv rate'])}%"
 
 
 
