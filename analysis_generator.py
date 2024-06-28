@@ -152,6 +152,7 @@ model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf", device='gpu')
 system_template = 'An analyst that generates key takeaways based on marketing data for the leadership team\n'
 prompt_template = 'USER: {0}\nREPORT:'
 with model.chat_session(system_template, prompt_template):
-    response = model.generate(prompt=f'Please write a short analysis (300 words or less) that details business outcomes from this table of deltas: {deltas}',
-                              temp=.5, max_tokens=400)
+    response = model.generate(prompt=f'Please write a short analysis (100 words or less) for the quarterly slideshow from this table of deltas: {deltas}',
+                              temp=.5)
 print(response)
+

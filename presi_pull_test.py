@@ -53,6 +53,9 @@ for i in slide1.shapes:
 def number_round_stylized(number):
     number = float(number)
     if 1 <= number < 1000:
+        number *= 100
+        number = round(number)
+        number /= 100
         return number
     elif 1000 <= number < 1000000:
         number = number / 10
@@ -133,8 +136,8 @@ table.table.cell(2, 6).text = f"{number_round_stylized(yoy_quarter['conversions'
 table.table.cell(3, 6).text = f"{deltas['yoy_quarter_delta'][4]['conversions']}"
 
 table.table.cell(0, 7).text = 'Conv. Rate'
-table.table.cell(1, 7).text = f"{number_round_stylized(current_quarter['conv rate'])}"
-table.table.cell(2, 7).text = f"{number_round_stylized(yoy_quarter['conv rate'])}"
+table.table.cell(1, 7).text = f"{number_round_stylized(current_quarter['conv rate'])}%"
+table.table.cell(2, 7).text = f"{number_round_stylized(yoy_quarter['conv rate'])}%"
 table.table.cell(3, 7).text = f"{deltas['yoy_quarter_delta'][7]['conv rate']}"
 
 
@@ -142,5 +145,7 @@ table.table.cell(3, 7).text = f"{deltas['yoy_quarter_delta'][7]['conv rate']}"
 #how to access the text box,
 text = slide1.shapes[2]
 print('text', text.text)
+
+text.text = response
 
 prs.save('pull_test.pptx')
