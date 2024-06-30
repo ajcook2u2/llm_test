@@ -2,12 +2,11 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 import pprint
 import pandas as pd
-from analysis_generator import data_delta, response
+from analysis_generator import data_delta, analysis_generator
 
-#lowest should be first quarter of 2024
+# lowest should be first quarter of 2024
 year_selection = 2024
-quarter_selection = 1
-
+quarter_selection = 2
 
 prs = Presentation('E:/LibreOffice/test presi.pptx')
 
@@ -15,20 +14,21 @@ slide = prs.slides[0]
 slide1 = prs.slides[1]
 slide2 = prs.slides[2]
 
-
 current_quarter = pd.read_csv(f'{year_selection}-quarterly.csv')
 quarter_columns = current_quarter.columns
 current_quarter = current_quarter.iloc[quarter_selection - 1]
 
 current_month = pd.read_csv(f'{year_selection}-monthly.csv')
 month_columns = current_month.columns
-current_month = current_month.iloc[(1 * (quarter_selection - 1)):(3 * (quarter_selection - 1))]
+current_month = current_month.iloc[(1 * (quarter_selection - 1)):(3 * (quarter_selection - 1) + 1)]
+current_month = current_month.reset_index(drop=True)
 
 yoy_quarter = pd.read_csv(f'{year_selection - 1}-quarterly.csv')
 yoy_quarter = yoy_quarter.iloc[quarter_selection - 1]
 
 yoy_month = pd.read_csv(f'{year_selection - 1}-monthly.csv')
-yoy_month = yoy_month.iloc[(1 * (quarter_selection - 1)):(3 * (quarter_selection - 1))]
+yoy_month = yoy_month.iloc[(1 * (quarter_selection - 1)):(3 * (quarter_selection))]
+yoy_month.reset_index(inplace=True, drop=True)
 
 if quarter_selection == 1:
     qoq_quarter = pd.read_csv(f'{year_selection - 1}-quarterly.csv')
@@ -37,17 +37,30 @@ else:
     qoq_quarter = pd.read_csv(f'{year_selection}-quarterly.csv')
     qoq_quarter = qoq_quarter.iloc[quarter_selection - 2]
 
+if quarter_selection == 1:
+    qoq_month = pd.read_csv(f'{year_selection - 1}-monthly.csv')
+    qoq_month = qoq_month.iloc[0:3]
+    qoq_month.reset_index(inplace=True, drop=True)
+elif quarter_selection == 2:
+    qoq_month = pd.read_csv(f'{year_selection}-monthly.csv')
+    qoq_month = qoq_month.iloc[3:6]
+    qoq_month.reset_index(inplace=True, drop=True)
+elif quarter_selection == 3:
+    qoq_month = pd.read_csv(f'{year_selection}-monthly.csv')
+    qoq_month = qoq_month.iloc[6:9]
+    qoq_month.reset_index(inplace=True, drop=True)
+elif quarter_selection == 4:
+    qoq_month = pd.read_csv(f'{year_selection}-monthly.csv')
+    qoq_month = qoq_month.iloc[9:12]
+    qoq_month.reset_index(inplace=True, drop=True)
 
-qoq_month = pd.read_csv('2023-monthly.csv')
-qoq_month = qoq_month.iloc[-3:]
-qoq_month.reset_index(inplace=True)
+
 
 deltas = data_delta(current_quarter, qoq_quarter, yoy_quarter, current_month, qoq_month, yoy_month, quarter_columns)
 
-#the asset tree of a slide, from top-down order
-for i in slide1.shapes:
-    print(i)
-
+# the asset tree of a slide, from top-down order
+# for i in slide1.shapes:
+#     print(i)
 
 
 def number_round_stylized(number):
@@ -79,9 +92,9 @@ def number_round_stylized(number):
             else:
                 break
         if scaler > 0:
-            number = number * (10**scaler)
+            number = number * (10 ** scaler)
             number = round(number)
-            number = number / (10**scaler)
+            number = number / (10 ** scaler)
             return number
         else:
             number = float(number)
@@ -91,15 +104,11 @@ def number_round_stylized(number):
             return number
 
 
-#how to access the title of a slide
+# how to access the title of a slide
 title = slide1.shapes.title
-print('title', title.text)
-print(current_quarter['cpc'], 'k')
-print(number_round_stylized(current_quarter['cpc']), 'p')
 
-#How to access and change cells on a table
+# How to access and change cells on a table
 table = slide1.shapes[1]
-print(table.table.cell(0, 0).text)
 table.table.cell(0, 0).text = 'Year'
 table.table.cell(1, 0).text = '2024'
 table.table.cell(2, 0).text = '2023'
@@ -140,12 +149,27 @@ table.table.cell(1, 7).text = f"{number_round_stylized(current_quarter['conv rat
 table.table.cell(2, 7).text = f"{number_round_stylized(yoy_quarter['conv rate'])}%"
 table.table.cell(3, 7).text = f"{deltas['yoy_quarter_delta'][7]['conv rate']}"
 
-
-
-#how to access the text box,
+# how to access the text box,
 text = slide1.shapes[2]
-print('text', text.text)
 
-text.text = response
+refined_text = {'test': 0}
+year = 2024
+quarter = 1
+while True:
+    try:
+        prs1 = Presentation(f'{year}-Q{quarter}.pptx')
+        slide1_1 = prs1.slides[1]
+        text_1 = slide1_1.shapes[2]
+        refined_text[f'{year}-Q{quarter}'] = text_1.text
+        print(text_1.text)
+        if quarter != 4:
+            quarter += 1
+        else:
+            quarter = 1
+            year += 1
+    except:
+        break
 
-prs.save('pull_test.pptx')
+text.text = analysis_generator(deltas, quarter_selection, year_selection, refined_text)
+
+prs.save(f'{year_selection}-Q{quarter_selection}.pptx')

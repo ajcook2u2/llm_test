@@ -1,9 +1,11 @@
 import pandas as pd
 from gpt4all import GPT4All
+from pptx import Presentation
 
-#next steps:
-#feed the data into the LLM and generate some analysis from the synthetic data.
-#create a multi-shot format to give it a template to follow
+
+# next steps:
+# feed the data into the LLM and generate some analysis from the synthetic data.
+# create a multi-shot format to give it a template to follow
 
 
 def data_delta(current_quarter, qoq_quarter, yoy_quarter, current_month, qoq_month, yoy_month, quarter_columns):
@@ -37,7 +39,8 @@ def data_delta(current_quarter, qoq_quarter, yoy_quarter, current_month, qoq_mon
         clicks_delta = (current_month['clicks'][i] - qoq_month['clicks'][i]) / qoq_month['clicks'][i]
         clicks_delta = round(clicks_delta * 10000)
         clicks_delta = f'{clicks_delta / 100}%'
-        conversions_delta = (current_month['conversions'][i] - qoq_month['conversions'][i]) / qoq_month['conversions'][i]
+        conversions_delta = (current_month['conversions'][i] - qoq_month['conversions'][i]) / qoq_month['conversions'][
+            i]
         conversions_delta = round(conversions_delta * 10000)
         conversions_delta = f'{conversions_delta / 100}%'
         cpm_delta = (current_month['cpm'][i] - qoq_month['cpm'][i]) / qoq_month['cpm'][i]
@@ -77,7 +80,8 @@ def data_delta(current_quarter, qoq_quarter, yoy_quarter, current_month, qoq_mon
         clicks_delta = (current_month['clicks'][i] - yoy_month['clicks'][i]) / yoy_month['clicks'][i]
         clicks_delta = round(clicks_delta * 10000)
         clicks_delta = f'{clicks_delta / 100}%'
-        conversions_delta = (current_month['conversions'][i] - yoy_month['conversions'][i]) / yoy_month['conversions'][i]
+        conversions_delta = (current_month['conversions'][i] - yoy_month['conversions'][i]) / yoy_month['conversions'][
+            i]
         conversions_delta = round(conversions_delta * 10000)
         conversions_delta = f'{conversions_delta / 100}%'
         cpm_delta = (current_month['cpm'][i] - yoy_month['cpm'][i]) / yoy_month['cpm'][i]
@@ -134,7 +138,6 @@ yoy_month = yoy_month.iloc[:3]
 qoq_quarter = pd.read_csv('2023-quarterly.csv')
 qoq_quarter = qoq_quarter.iloc[3]
 
-
 qoq_month = pd.read_csv('2023-monthly.csv')
 qoq_month = qoq_month.iloc[-3:]
 qoq_month.reset_index(inplace=True)
@@ -148,11 +151,63 @@ print(deltas['qoq_quarter_delta'])
 print(deltas['yoy_quarter_delta'][0]['spend'])
 
 
-model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf", device='gpu')
-system_template = 'An analyst that generates key takeaways based on marketing data for the leadership team\n'
-prompt_template = 'USER: {0}\nREPORT:'
-with model.chat_session(system_template, prompt_template):
-    response = model.generate(prompt=f'Please write a short analysis (100 words or less) for the quarterly slideshow from this table of deltas: {deltas}',
-                              temp=.5)
-print(response)
+def analysis_generator(deltas, quarter_selection, year_selection, refined_text):
+    model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf", device='gpu')
+    system_template = 'An analyst that generates key takeaways based on marketing data for the leadership team\n'
+    prompt_template = 'USER: {0}\nREPORT:'
 
+    year = 2024
+    quarter = 1
+    with model.chat_session(system_template, prompt_template):
+        print('entered')
+        while quarter != quarter_selection or year != year_selection:
+            print('loop')
+            current_quarter = pd.read_csv(f'{year}-quarterly.csv')
+            quarter_columns = current_quarter.columns
+            current_quarter = current_quarter.iloc[quarter - 1]
+
+            current_month = pd.read_csv(f'{year}-monthly.csv')
+            month_columns = current_month.columns
+            current_month = current_month.iloc[(1 * (quarter - 1)):(3 * (quarter - 1))]
+
+            yoy_quarter = pd.read_csv(f'{year - 1}-quarterly.csv')
+            yoy_quarter = yoy_quarter.iloc[quarter - 1]
+
+            yoy_month = pd.read_csv(f'{year - 1}-monthly.csv')
+            yoy_month = yoy_month.iloc[(1 * (quarter - 1)):(3 * (quarter - 1))]
+
+            if quarter == 1:
+                qoq_quarter = pd.read_csv(f'{year - 1}-quarterly.csv')
+                qoq_quarter = qoq_quarter.iloc[quarter + 2]
+            else:
+                qoq_quarter = pd.read_csv(f'{year}-quarterly.csv')
+                qoq_quarter = qoq_quarter.iloc[quarter - 2]
+
+            qoq_month = pd.read_csv(f'{year - 1}-monthly.csv')
+            if quarter == 1:
+                qoq_month = qoq_month.iloc[quarter + 2]
+            else:
+                qoq_month = qoq_month.iloc[quarter - 2]
+            # qoq_month.reset_index(inplace=True)
+            deltas_1 = data_delta(current_quarter, qoq_quarter, yoy_quarter, current_month, qoq_month, yoy_month,
+                                quarter_columns)
+
+            response = model.generate(
+                prompt=f'Please write a short analysis (700 characters or less) for the {year}-Q{quarter} slideshow from this table of deltas: {deltas_1}',
+                temp=2)
+            print(response)
+            response = model.generate(
+                prompt=f'Here is the final version that got delivered to the client: {refined_text[f"{year}-Q{quarter}"]}. Please make future reports like this.',
+                temp=2)
+            print(response)
+            if quarter == 4:
+                year += 1
+                quarter = 1
+            else:
+                quarter += 1
+            print('x')
+        response = model.generate(
+            prompt=f'Please write a short analysis (700 characters or less) for the {year}-Q{quarter} slideshow from this table of deltas: {deltas}',
+            temp=2)
+        print(response)
+    return response

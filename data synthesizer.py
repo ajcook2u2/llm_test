@@ -6,18 +6,18 @@ years = ['2023', '2024', '2025', '2026']
 
 for year in years:
     yearly_budget = 100000
-    january_budget      = 0.03333333333 * 100000
-    february_budget     = 0.08333333333 * 100000
-    march_budget        = 0.1333333333 * 100000
-    april_budget        = 0.1333333333 * 100000
-    may_budget          = 0.1033333333 * 100000
-    june_budget         = 0.1033333333 * 100000
-    july_budget         = 0.08833333333 * 100000
-    august_budget       = 0.08833333333 * 100000
-    september_budget    = 0.07833333333 * 100000
-    october_budget      = 0.07833333333 * 100000
-    november_budget     = 0.04333333333 * 100000
-    december_budget     = 0.03333333333 * 100000
+    january_budget      = (0.03333333333 * 100000) * (random.randrange(85, 100) / 100)
+    february_budget     = (0.08333333333 * 100000) * (random.randrange(85, 100) / 100)
+    march_budget        = (0.1333333333 * 100000) * (random.randrange(85, 100) / 100)
+    april_budget        = (0.1333333333 * 100000) * (random.randrange(85, 100) / 100)
+    may_budget          = (0.1033333333 * 100000) * (random.randrange(85, 100) / 100)
+    june_budget         = (0.1033333333 * 100000) * (random.randrange(85, 100) / 100)
+    july_budget         = (0.08833333333 * 100000) * (random.randrange(85, 100) / 100)
+    august_budget       = (0.08833333333 * 100000) * (random.randrange(85, 100) / 100)
+    september_budget    = (0.07833333333 * 100000) * (random.randrange(85, 100) / 100)
+    october_budget      = (0.07833333333 * 100000) * (random.randrange(85, 100) / 100)
+    november_budget     = (0.04333333333 * 100000) * (random.randrange(85, 100) / 100)
+    december_budget     = (0.03333333333 * 100000) * (random.randrange(85, 100) / 100)
 
     monthly_budgets = [january_budget, february_budget, march_budget, april_budget, may_budget, june_budget, july_budget,
                        august_budget, september_budget, october_budget, november_budget, december_budget]
@@ -40,13 +40,13 @@ for year in years:
     counter = 0
     for month in months:
         if month not in on_season_months:
-            cpm.append(random.randrange(200, 400) / 10)
-            ctr.append(random.randrange(200, 400) / 100)
-            conv_rate.append(random.randrange(200, 400) / 100)
+            cpm.append(random.randrange(200, 250) / 10)
+            ctr.append(random.randrange(200, 250) / 1000)
+            conv_rate.append(random.randrange(200, 250) / 1000)
         if month in on_season_months:
             cpm.append(random.randrange(100, 150) / 100)
-            ctr.append(random.randrange(100, 150) / 1000)
-            conv_rate.append(random.randrange(100, 150) / 1000)
+            ctr.append(random.randrange(100, 150) / 100)
+            conv_rate.append(random.randrange(100, 150) / 100)
         impr.append(round(monthly_budgets[counter] / cpm[counter]) * 1000)
         clicks.append(round(impr[counter] * ctr[counter]))
         conversions.append(clicks[counter] * conv_rate[counter])
