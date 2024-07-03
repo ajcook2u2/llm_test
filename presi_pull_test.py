@@ -37,22 +37,11 @@ else:
     qoq_quarter = pd.read_csv(f'{year_selection}-quarterly.csv')
     qoq_quarter = qoq_quarter.iloc[quarter_selection - 2]
 
-if quarter_selection == 1:
-    qoq_month = pd.read_csv(f'{year_selection - 1}-monthly.csv')
-    qoq_month = qoq_month.iloc[0:3]
-    qoq_month.reset_index(inplace=True, drop=True)
-elif quarter_selection == 2:
-    qoq_month = pd.read_csv(f'{year_selection}-monthly.csv')
-    qoq_month = qoq_month.iloc[3:6]
-    qoq_month.reset_index(inplace=True, drop=True)
-elif quarter_selection == 3:
-    qoq_month = pd.read_csv(f'{year_selection}-monthly.csv')
-    qoq_month = qoq_month.iloc[6:9]
-    qoq_month.reset_index(inplace=True, drop=True)
-elif quarter_selection == 4:
-    qoq_month = pd.read_csv(f'{year_selection}-monthly.csv')
-    qoq_month = qoq_month.iloc[9:12]
-    qoq_month.reset_index(inplace=True, drop=True)
+
+qoq_month = pd.read_csv(f'{year_selection - 1}-monthly.csv')
+qoq_month = qoq_month.iloc[((quarter_selection - 1) * 3):(3 * quarter_selection)]
+qoq_month.reset_index(inplace=True, drop=True)
+
 
 
 

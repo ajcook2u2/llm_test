@@ -194,11 +194,17 @@ def analysis_generator(deltas, quarter_selection, year_selection, refined_text):
 
             response = model.generate(
                 prompt=f'Please write a short analysis (700 characters or less) for the {year}-Q{quarter} slideshow from this table of deltas: {deltas_1}',
-                temp=2)
+                temp=5)
+            response = response.split('\n')
+            response = response[4:]
+            response = '\n'.join(response)
             print(response)
             response = model.generate(
                 prompt=f'Here is the final version that got delivered to the client: {refined_text[f"{year}-Q{quarter}"]}. Please make future reports like this.',
-                temp=2)
+                temp=0)
+            response = response.split('\n')
+            response = response[4:]
+            response = '\n'.join(response)
             print(response)
             if quarter == 4:
                 year += 1
@@ -207,7 +213,10 @@ def analysis_generator(deltas, quarter_selection, year_selection, refined_text):
                 quarter += 1
             print('x')
         response = model.generate(
-            prompt=f'Please write a short analysis (700 characters or less) for the {year}-Q{quarter} slideshow from this table of deltas: {deltas}',
-            temp=2)
+            prompt=f'What would be the final version that gets delivered to the client, based on these: {deltas}',
+            temp=5)
+        response = response.split('\n')
+        response = response[4:]
+        response = '\n'.join(response)
         print(response)
     return response
