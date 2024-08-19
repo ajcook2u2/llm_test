@@ -138,26 +138,28 @@ table.table.cell(1, 7).text = f"{number_round_stylized(current_quarter['conv rat
 table.table.cell(2, 7).text = f"{number_round_stylized(yoy_quarter['conv rate'])}%"
 table.table.cell(3, 7).text = f"{deltas['yoy_quarter_delta'][7]['conv rate']}"
 
-# how to access the text box,
-text = slide1.shapes[2]
+print(deltas)
 
-refined_text = {'test': 0}
-year = 2024
-quarter = 1
-while True:
-    try:
-        prs1 = Presentation(f'{year}-Q{quarter}.pptx')
-        slide1_1 = prs1.slides[1]
-        text_1 = slide1_1.shapes[2]
-        refined_text[f'{year}-Q{quarter}'] = text_1.text
-        print(text_1.text)
-        if quarter != 4:
-            quarter += 1
-        else:
-            quarter = 1
-            year += 1
-    except:
-        break
+# how to access the text box,
+# text = slide1.shapes[2]
+#
+# refined_text = {'test': 0}
+# year = 2024
+# quarter = 1
+# while True:
+#     try:
+#         prs1 = Presentation(f'{year}-Q{quarter}.pptx')
+#         slide1_1 = prs1.slides[1]
+#         text_1 = slide1_1.shapes[2]
+#         refined_text[f'{year}-Q{quarter}'] = text_1.text
+#         print(text_1.text)
+#         if quarter != 4:
+#             quarter += 1
+#         else:
+#             quarter = 1
+#             year += 1
+#     except:
+#         break
 
 text.text = analysis_generator(deltas, quarter_selection, year_selection, refined_text)
 

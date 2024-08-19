@@ -40,13 +40,13 @@ for year in years:
     counter = 0
     for month in months:
         if month not in on_season_months:
-            cpm.append(random.randrange(200, 250) / 10)
-            ctr.append(random.randrange(200, 250) / 1000)
+            cpm.append(random.randrange(200, 250) / 80)
+            ctr.append(random.randrange(200, 250) / 500)
             conv_rate.append(random.randrange(200, 250) / 1000)
         if month in on_season_months:
             cpm.append(random.randrange(100, 150) / 100)
             ctr.append(random.randrange(100, 150) / 100)
-            conv_rate.append(random.randrange(100, 150) / 100)
+            conv_rate.append(random.randrange(100, 150) / 800)
         impr.append(round(monthly_budgets[counter] / cpm[counter]) * 1000)
         clicks.append(round(impr[counter] * ctr[counter]))
         conversions.append(clicks[counter] * conv_rate[counter])
